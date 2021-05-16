@@ -42,9 +42,20 @@ async def fetch_message(self, url):
 commands.Bot.fetch_message = fetch_message
 
 async def close(self):
-    async with aiohttp.ClientSession(headers={"authorization": "Bot " + TOKEN}) as session:
-        async with session.post(url=f'https://discord.com/channels/{self.config["ready_ch"]}/messages', json={'content': "<a:server_rotation:774429204673724416>停止"}) as r:
+    await self.ready_ch.send('<a:server_rotation:774429204673724416>停止')
+    for extension in tuple(self.__extensions):
+        try:
+            self.unload_extension(extension)
+        except Exception:
             pass
+
+    for cog in tuple(self.__cogs):
+        try:
+            self.remove_cog(cog)
+        except Exception:
+            pass
+
+    await super().close()
 commands.Bot.close = close
 
 TOKEN = os.environ.get("TOKEN")
@@ -137,8 +148,8 @@ async def on_ready():
     bot.pin_webhook = discord.utils.get(webhooks, name='超雑談鯖_pin_wh')
 
     # 起動情報関連
-    ready_ch = bot.get_channel(config['ready_ch'])
-    await ready_ch.send('<a:server_rotation:774429204673724416>起動')
+    bot.ready_ch = bot.get_channel(config['ready_ch'])
+    await bot.ready_ch.send('<a:server_rotation:774429204673724416>起動')
 
     #運営部屋取得
     bot.unei_ch = bot.get_channel(config['unei_ch'])
