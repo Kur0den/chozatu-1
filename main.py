@@ -8,6 +8,7 @@ import os
 import re
 import datetime
 from pykakasi import kakasi
+import aiohttp
 
 with open('config.json', 'r', encoding='utf-8') as file:
     from json import load
