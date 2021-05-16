@@ -12,7 +12,7 @@ from pykakasi import kakasi
 with open('config.json', 'r', encoding='utf-8') as file:
     from json import load
     config = load(file)
-bot.config = config
+
 
 kakasi = kakasi()
 kakasi.setMode('J', 'H')
@@ -48,7 +48,7 @@ commands.Bot.close = close
 
 TOKEN = os.environ.get("TOKEN")
 bot = commands.Bot(command_prefix='c/', intents=discord.Intents.all())
-
+bot.config = config
 slash = SlashCommand(bot, sync_commands=True)
 
 bot.ready = False
