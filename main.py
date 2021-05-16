@@ -12,6 +12,7 @@ from pykakasi import kakasi
 with open('config.json', 'r', encoding='utf-8') as file:
     from json import load
     config = load(file)
+bot.config = config
 
 kakasi = kakasi()
 kakasi.setMode('J', 'H')
@@ -39,6 +40,11 @@ async def fetch_message(self, url):
 
 commands.Bot.fetch_message = fetch_message
 
+async def close(self):
+    async with aiohttp.ClientSession(headers={"authorization": "Bot " + TOKEN}) as session:
+        async with session.post(url=f'https://discord.com/channels/{self.config["ready_ch"]}/messages', json={'content': "<a:server_rotation:774429204673724416>停止"}) as r:
+            pass
+commands.Bot.close = close
 
 TOKEN = os.environ.get("TOKEN")
 bot = commands.Bot(command_prefix='c/', intents=discord.Intents.all())
