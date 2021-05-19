@@ -43,13 +43,13 @@ commands.Bot.fetch_message = fetch_message
 
 async def close(self):
     await self.ready_ch.send('<a:server_rotation:774429204673724416>停止')
-    for extension in tuple(self.__extensions):
+    for extension in tuple(self.extensions):
         try:
             self.unload_extension(extension)
         except Exception:
             pass
 
-    for cog in tuple(self.__cogs):
+    for cog in tuple(self.cogs):
         try:
             self.remove_cog(cog)
         except Exception:
