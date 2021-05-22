@@ -14,9 +14,9 @@ class Empty(commands.Cog):
         guild_ids=[733707710784340100]
     )
     async def _empty(self, ctx):
-         
-         
-        msg = await ctx.send(embeds=[discord.Embed()])
+
+
+        msg = await ctx.send(embeds=[discord.Embed(title='wait a little seconds...')])
         await msg.edit(flags=4)
         return
 
