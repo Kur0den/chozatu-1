@@ -3,8 +3,7 @@ from discord.ext import commands
 from inspect import getsourcelines
 from os.path import relpath
 
-source_url = 'https://github.com/Req-kun/chozatu'
-branch = 'main'
+
 
 
 class Source(commands.Cog):
@@ -13,6 +12,8 @@ class Source(commands.Cog):
 
     @commands.command()
     async def source(self, ctx, *, command):
+        source_url = 'https://github.com/Req-kun/chozatu'
+        branch = 'main'
         if command is None:
             return await ctx.send(source_url)
 
