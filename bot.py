@@ -42,6 +42,8 @@ class ChozatuBot(Bot):
         self.load_extensions()
 
 
+    def __str__(self):
+        return '超雑談鯖専属Bot'
 
     """ Bot command's check"""
     def check_commands(self, ctx):
