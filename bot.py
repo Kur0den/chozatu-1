@@ -151,13 +151,8 @@ class ChozatuBot(Bot):
             self.siritori_list.insert(0, msg.content)
         self.siritori = True
 
-        # その他
-        self.ready = True
-        print("ready")
-
         self.time_action_loop.stop()
         self.time_action_loop.start()
-        return
 
 
         from aiohttp import ClientSession
