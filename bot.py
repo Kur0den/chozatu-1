@@ -203,7 +203,7 @@ class ChozatuBot(Bot):
         ext_files = tuple(Path('cogs/.').glob('*.py'))
         count = 0
         for ext in ext_files:
-            f = str(ext).replace('\\', '.')[:-3]
+            f = str(ext).replace('/', '.')[:-3]
             try:
                 self.load_extension(f)
                 print(f'{f} was loaded!')
