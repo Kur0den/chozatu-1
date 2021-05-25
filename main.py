@@ -7,7 +7,15 @@ import datetime
 from bot import ChozatuBot
 
 TOKEN = os.environ.get("TOKEN")
-bot = ChozatuBot(command_prefix='c/', intents=discord.Intents.all())
+MONGO_DB_URL = os.environ.get('MONGO_DB_URL')
+MONGO_DB_ID = os.environ.get("MONGO_DB_ID")
+bot = ChozatuBot(
+    MONGO_DB_URL,
+    MONGO_DB_ID,
+    command_prefix='c/',
+    intents=discord.Intents.all()
+)
+
 slash = SlashCommand(bot, sync_commands=True)
 
 

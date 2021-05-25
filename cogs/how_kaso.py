@@ -41,6 +41,10 @@ class How_kaso(commands.Cog):
         delta = n - l
         t = trans(delta)
         await message.reply(f'ただいまの過疎記録、{t.day}日 {t.hour}時間 {t.min}分 {t.sec}秒 {t.milli}ミリ秒')
+        if str(message.author.id) in self.bot.send_kaso_count.keys():
+            self.bot.send_kaso_count[str(message.author.id)] += 1
+        if str(message.author.id) not in self.bot.send_kaso_count.keys():
+            self.bot.send_kaso_count[str(message.author.id)] = 1
 
 def setup(bot):
     bot.add_cog(How_kaso(bot))

@@ -3,10 +3,16 @@ from discord.ext.tasks import loop
 from datetime import datetime
 
 class ChozatuBot(Bot):
-    def __init__(self, *args, **kwargs):
+    def __init__(self, mongo_url, mongo_id, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-        self.ready = False
+        self.ready = self.siritori = False
+
+
+        from motor.motor_asyncio import AsyncIOMotorClient as motor
+        dbclient = motor(mongo_url)
+        self.collection = dbclient.kasomsgcount.first
+        self.mongo_id = mongo_id
 
 
         from pykakasi import kakasi
@@ -151,6 +157,11 @@ class ChozatuBot(Bot):
             self.siritori_list.insert(0, msg.content)
         self.siritori = True
 
+
+        # import data from mongodb
+        self.send_kaso_count = await self.collection.find_one({"id": self.mongo_id})
+        self.send_kaso_count['id'] = self.mongo_id
+
         self.time_action_loop.stop()
         self.time_action_loop.start()
 
@@ -165,6 +176,8 @@ class ChozatuBot(Bot):
 
     async def close(self):
         await self.ready_ch.send('<a:server_rotation:774429204673724416>停止')
+        await self.collection.replace_one({"id": self.mongo_id}, self.send_kaso_count)
+
         for extension in tuple(self.extensions):
             try:
                 self.unload_extension(extension)
