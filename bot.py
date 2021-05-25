@@ -190,8 +190,8 @@ class ChozatuBot(Bot):
             except Exception:
                 pass
 
-        self.session.close()
-        self.session_bot.close()
+        await self.session.close()
+        await self.session_bot.close()
 
         await super().close()
 
