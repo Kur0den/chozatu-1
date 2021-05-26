@@ -159,9 +159,8 @@ class ChozatuBot(Bot):
 
 
         # import data from mongodb
-        self.send_kaso_count = await self.collection.find_one({"id": self.mongo_id})
-        self.send_kaso_count['id'] = self.mongo_id
-
+        self.send_kaso_count = await self.collection.find_one({"_id": self.mongo_id})
+        
         self.time_action_loop.stop()
         self.time_action_loop.start()
 
@@ -176,7 +175,7 @@ class ChozatuBot(Bot):
 
     async def close(self):
         await self.ready_ch.send('<a:server_rotation:774429204673724416>停止')
-        await self.collection.replace_one({"id": self.mongo_id}, self.send_kaso_count)
+        await self.collection.replace_one({"_id": self.mongo_id}, self.send_kaso_count)
 
         for extension in tuple(self.extensions):
             try:
