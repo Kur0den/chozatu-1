@@ -8,7 +8,7 @@ class ChozatuBot(Bot):
 
         self.ready = self.siritori = False
 
-        self.discord_components = discord_components
+        self.discomp = discord_components
 
 
         from motor.motor_asyncio import AsyncIOMotorClient as motor
