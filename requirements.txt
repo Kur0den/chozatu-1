@@ -9,3 +9,4 @@ async-google-trans-new
 pykakasi
 motor
 dnspython
+discord-components
