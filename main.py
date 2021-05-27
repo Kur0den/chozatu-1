@@ -6,7 +6,7 @@ import re
 import datetime
 from bot import ChozatuBot
 from bson.objectid import ObjectId
-from discord_components import DiscordComponents, Button, ButtonStyle, InteractionType
+import discord_components
 
 
 TOKEN = os.environ.get("TOKEN")
@@ -15,12 +15,13 @@ MONGO_DB_ID = os.environ.get("MONGO_DB_ID")
 bot = ChozatuBot(
     MONGO_DB_URL,
     ObjectId(MONGO_DB_ID),
+    discord_components,
     command_prefix='c/',
     intents=discord.Intents.all()
 )
 
 
-ddb = DiscordComponents(bot)
+ddb = discord_components.DiscordComponents(bot)
 slash = SlashCommand(bot, sync_commands=True)
 
 

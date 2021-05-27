@@ -3,10 +3,12 @@ from discord.ext.tasks import loop
 from datetime import datetime
 
 class ChozatuBot(Bot):
-    def __init__(self, mongo_url, mongo_id, *args, **kwargs):
+    def __init__(self, mongo_url, mongo_id, discord_components, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
         self.ready = self.siritori = False
+
+        self.discord_components = discord_components
 
 
         from motor.motor_asyncio import AsyncIOMotorClient as motor
@@ -160,7 +162,7 @@ class ChozatuBot(Bot):
 
         # import data from mongodb
         self.send_kaso_count = await self.collection.find_one({"_id": self.mongo_id})
-        
+
         self.time_action_loop.stop()
         self.time_action_loop.start()
 
