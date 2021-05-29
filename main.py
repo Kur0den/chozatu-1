@@ -7,6 +7,7 @@ import datetime
 from bot import ChozatuBot
 from bson.objectid import ObjectId
 import discord_components
+import sys
 
 
 TOKEN = os.environ.get("TOKEN")
@@ -24,5 +25,11 @@ bot = ChozatuBot(
 ddb = discord_components.DiscordComponents(bot)
 slash = SlashCommand(bot, sync_commands=True)
 
+try:
+    sys.argv[2]
+    if sys.argv[2] == 'test':
+        sys.exit()
+except:
+    pass
 
 bot.run(TOKEN)

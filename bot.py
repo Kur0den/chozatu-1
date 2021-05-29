@@ -1,6 +1,7 @@
 from discord.ext.commands import Bot
 from discord.ext.tasks import loop
 from datetime import datetime
+import os
 
 class ChozatuBot(Bot):
     def __init__(self, mongo_url, mongo_id, discord_components, *args, **kwargs):
@@ -214,7 +215,7 @@ class ChozatuBot(Bot):
         ext_files = tuple(Path('cogs/.').glob('*.py'))
         count = 0
         for ext in ext_files:
-            f = str(ext).replace('/', '.')[:-3]
+            f = str(ext).replace(os.sep, '.')[:-3]
             try:
                 self.load_extension(f)
                 print(f'{f} was loaded!')
