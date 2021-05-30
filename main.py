@@ -20,7 +20,6 @@ bot = ChozatuBot(
 )
 
 
-ddb = discord_components.DiscordComponents(bot)
 slash = SlashCommand(bot, sync_commands=True)
 
 try:
