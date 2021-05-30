@@ -4,12 +4,11 @@ from datetime import datetime
 import os
 
 class ChozatuBot(Bot):
-    def __init__(self, mongo_url, mongo_id, discord_components, *args, **kwargs):
+    def __init__(self, mongo_url, mongo_id, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
         self.ready = self.siritori = False
 
-        self.discomp = discord_components
 
 
         from motor.motor_asyncio import AsyncIOMotorClient as motor
