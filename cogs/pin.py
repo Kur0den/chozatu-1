@@ -22,7 +22,7 @@ class Pin(commands.Cog):
             embeds=message.embeds,
             content=message.content,
             username=f"{message.author.display_name}(ID:{message.author.id})",
-            avatar_url=message.author.avatar_url,
+            avatar_url=message.author.avatar.url,
             files=files
         )
         return

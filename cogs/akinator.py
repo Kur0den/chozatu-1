@@ -57,7 +57,7 @@ class Akinator(commands.Cog):
     async def _akinator(self, ctx, accuracy):
          
         author = ctx.author
-        msg = await ctx.send(embed=discord.Embed(title='準備中...').set_author(name=f'{author.display_name}({author.id})', icon_url=author.avatar_url))
+        msg = await ctx.send(embed=discord.Embed(title='準備中...').set_author(name=f'{author.display_name}({author.id})', icon_url=author.avatar.url))
 
         for r in answers.keys():
             await msg.add_reaction(r)
@@ -72,7 +72,7 @@ class Akinator(commands.Cog):
                     description=sentakusi
                 ).set_author(
                     name=f'{author.display_name}({author.id})',
-                    icon_url=author.avatar_url
+                    icon_url=author.avatar.url
                 ).set_footer(
                     text='進行率: %7.3f' % aki.progression + f'% (回答: {accuracy}%)'
                 )
@@ -86,7 +86,7 @@ class Akinator(commands.Cog):
                         color=0xff0000
                     ).set_author(
                         name=f'{author.display_name}({author.id})',
-                        icon_url=author.avatar_url
+                        icon_url=author.avatar.url
                     )
                 )
                 return
@@ -112,7 +112,7 @@ class Akinator(commands.Cog):
                 description=f'はい - {list(answers.keys())[0]}\nいいえ - {list(answers.keys())[1]}',
             ).set_author(
                 name=f'{author.display_name}({author.id})',
-                icon_url=author.avatar_url
+                icon_url=author.avatar.url
             ).set_image(url=aki.first_guess["absolute_picture_path"])
         )
         for r in list(answers.keys())[:2]:
@@ -126,7 +126,7 @@ class Akinator(commands.Cog):
                     color=0xff0000
                 ).set_author(
                     name=f'{author.display_name}({author.id})',
-                    icon_url=author.avatar_url
+                    icon_url=author.avatar.url
                 )
             )
             return
@@ -138,7 +138,7 @@ class Akinator(commands.Cog):
                     color=0x00ffff
                 ).set_author(
                     name=f'{author.display_name}({author.id})',
-                    icon_url=author.avatar_url
+                    icon_url=author.avatar.url
                 )
             )
         else:
@@ -148,7 +148,7 @@ class Akinator(commands.Cog):
                     color=0xff0000
                 ).set_author(
                     name=f'{author.display_name}({author.id})',
-                    icon_url=author.avatar_url
+                    icon_url=author.avatar.url
                 )
             )
         return

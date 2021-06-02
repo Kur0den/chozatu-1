@@ -93,7 +93,7 @@ class Autoui(commands.Cog):
                     await msg.edit(content=f"-approve {message.author.id}", embed=make(
                         title='ユーザ情報',
                         description='この情報で表示されている時間情報はUTCを用いられています。\n日本(東京)時間への変換は `+9時間` してください。',
-                        author={"name": f'{message.author.name}(ID:{message.author.id})', "icon_url": message.author.avatar_url},
+                        author={"name": f'{message.author.name}(ID:{message.author.id})', "icon_url": message.author.avatar.url},
                         fields=[
                             {"name": "アカウント作成日時", "value": message.author.created_at},
                             {"name": "サーバー参加日時", "value": message.author.joined_at},
@@ -120,7 +120,7 @@ class Autoui(commands.Cog):
             content=f"-approve {member.id}",
             embed=make(
                 title='ユーザ情報',
-                author={"name": f"{member.name}(ID: {member.id})", "icon_url": member.avatar_url},
+                author={"name": f"{member.name}(ID: {member.id})", "icon_url": member.avatar.url},
                 description='認証情報送信待機中…',
                 fields=[
                     {"name": "アカウント作成日時", "value": member.created_at},

@@ -17,7 +17,7 @@ def create_embed(rep_msg, msg):
         description=f'{msg.content}',
     ).set_author(
         name=f'{msg.author.display_name}({msg.author.id})',
-        icon_url=msg.author.avatar_url,
+        icon_url=msg.author.avatar.url,
     )
     return [embed_f, embed_s]
     

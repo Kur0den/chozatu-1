@@ -104,7 +104,7 @@ class Siritori(commands.Cog):
         
         if message.content in self.bot.siritori_list:
             await message.delete()
-            await message.channel.send(embed=discord.Embed(title=f'”{message.content}” はすでに使用されています', color=0xff0000).set_author(name=message.author.name, icon_url=message.author.avatar_url))
+            await message.channel.send(embed=discord.Embed(title=f'”{message.content}” はすでに使用されています', color=0xff0000).set_author(name=message.author.name, icon_url=message.author.avatar.url))
             return
         
         self.bot.siritori_list.append(message.content)
