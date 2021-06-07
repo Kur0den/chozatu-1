@@ -6,7 +6,9 @@ import os
 class ChozatuBot(Bot):
     def __init__(self, mongo_url, mongo_id, *args, **kwargs):
         super().__init__(*args, **kwargs)
-
+        
+        self.remove_command('help')
+        
         self.ready = self.siritori = False
 
 
