@@ -11,7 +11,7 @@ class Source(commands.Cog):
         self.bot = bot
 
     @commands.command()
-    async def source(self, ctx, *, command):
+    async def source(self, ctx, *, command=None):
         source_url = 'https://github.com/Req-kun/chozatu'
         branch = 'main'
         if command is None:
