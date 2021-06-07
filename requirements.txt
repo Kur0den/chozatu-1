@@ -1,5 +1,5 @@
 git+https://github.com/Rapptz/discord.py
-discord-py-slash-command
+discord-py-slash-command==1.2.2
 bottle
 discord-embed-extensions
 pytz
