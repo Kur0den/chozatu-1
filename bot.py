@@ -8,7 +8,7 @@ from re import compile as recompile
 from os import sep as ossep
 
 from datetime import datetime
-from pykakasi import kakasi
+from pykakasi import kakasi as py_kakasi
 from json import load
 from aiohttp import ClientSession
 from pathlib import Path
@@ -26,7 +26,7 @@ class ChozatuBot(Bot):
         self.collection = dbclient.kasomsgcount.first
         self.mongo_id = mongo_id
 
-        kakasi = kakasi()
+        kakasi = py_kakasi()
         kakasi.setMode('J', 'H')
         self.conv = kakasi.getConverter()
 
