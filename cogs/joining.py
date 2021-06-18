@@ -23,7 +23,7 @@ class Joining(commands.Cog):
     ])
     async def _joining(self, ctx, user = None):
          
-        now = datetime.datetime.now()
+        now = datetime.datetime.now(tz=datetime.timezone.utc)
         if user == None:
             user = ctx.author
             joined = user.joined_at

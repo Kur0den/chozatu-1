@@ -157,7 +157,7 @@ class Autoui(commands.Cog):
 
                 # 判定３
                 if embed.author.name.endswith(f'{str(member.id)})'):
-                    now = datetime.datetime.now()
+                    now = datetime.datetime.now(tz=datetime.timezone.utc)
                     joined = member.joined_at
                     delta = now - joined
                     r = trans(delta)

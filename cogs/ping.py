@@ -11,7 +11,7 @@ class Ping(commands.Cog):
 
     @commands.command(name="ping")
     async def _ping(self, ctx):
-        now = datetime.now()
+        now = datetime.now(tz=datetime.timezone.utc)
         msg = await ctx.send(embed=discord.Embed(title='計測中...', color=discord.Colour.dark_theme()))
         created = msg.created_at
 
