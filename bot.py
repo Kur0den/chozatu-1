@@ -1,56 +1,56 @@
 from discord.ext.commands import Bot
 from discord.ext.tasks import loop
+from discord.utils import get
+
+from motor.motor_asyncio import AsyncIOMotorClient as motor
+
+from re import compile as recompile
+from os import sep as ossep
+
 from datetime import datetime
-import os
+from pykakasi import kakasi
+from json import load
+from aiohttp import ClientSession
+from pathlib import Path
+
 
 class ChozatuBot(Bot):
     def __init__(self, mongo_url, mongo_id, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        
+
         self.remove_command('help')
-        
+
         self.ready = self.siritori = False
 
-
-
-        from motor.motor_asyncio import AsyncIOMotorClient as motor
         dbclient = motor(mongo_url)
         self.collection = dbclient.kasomsgcount.first
         self.mongo_id = mongo_id
 
-
-        from pykakasi import kakasi
         kakasi = kakasi()
         kakasi.setMode('J', 'H')
         self.conv = kakasi.getConverter()
 
         with open('config.json', 'r', encoding='utf-8') as file:
-            from json import load
             self.config = load(file)
 
-
-        import re
-        self.fm_id_regex = id_regex = re.compile(r'(?:(?P<channel_id>[0-9]{15,21})-)?(?P<message_id>[0-9]{15,21})$')
-        self.fm_link_regex = re.compile(
+        self.fm_id_regex = id_regex = recompile(r'(?:(?P<channel_id>[0-9]{15,21})-)?(?P<message_id>[0-9]{15,21})$')
+        self.fm_link_regex = recompile(
             r'https?://(?:(ptb|canary|www)\.)?discord(?:app)?\.com/channels/'
             r'(?:[0-9]{15,21}|@me)'
             r'/(?P<channel_id>[0-9]{15,21})/(?P<message_id>[0-9]{15,21})/?$'
         )
 
-        self.time_remove_role_regix = re.compile(
+        self.time_remove_role_regix = recompile(
             r'(?P<user_id>[0-9]{15,21})/'
             r'(?P<role_id>[0-9]{15,21})/'
             r'(?P<datetime>[0-9]{4}\-[0-9]{2}\-[0-9]{2} [0-9]{2}\:[0-9]{2}\:[0-9]{2}\.[0-9]{6})'
         )
 
-
         # add check
         self.add_check(self.check_commands)
 
-
         # 最後に実行
         self.load_extensions()
-
 
     def __str__(self):
         return '超雑談鯖専属Bot'
@@ -63,8 +63,8 @@ class ChozatuBot(Bot):
         if self.ready:
             return
 
-        #bot_id, token, guild_id
-        #await utils.manage_commands.remove_all_commands_in(804649928638595093, TOKEN, 733707710784340100)
+        # bot_id, token, guild_id
+        # await utils.manage_commands.remove_all_commands_in(804649928638595093, TOKEN, 733707710784340100)
 
         self.guild = self.get_guild(self.config['guild'])
 
@@ -108,14 +108,14 @@ class ChozatuBot(Bot):
         # pin機能関連
         self.pin_ch = self.get_channel(self.config['pin_ch'])
         webhooks = await self.pin_ch.webhooks()
-        from discord.utils import get
+
         self.pin_webhook = get(webhooks, name='超雑談鯖_pin_wh')
 
         # 起動情報関連
         self.ready_ch = self.get_channel(self.config['ready_ch'])
         await self.ready_ch.send('<a:server_rotation:774429204673724416>起動')
 
-        #運営部屋取得
+        # 運営部屋取得
         self.unei_ch = self.get_channel(self.config['unei_ch'])
 
         # approve関連
@@ -141,10 +141,10 @@ class ChozatuBot(Bot):
 
         async for msg in self.time_remove_role_ch.history(limit=None):
             match = self.time_remove_role_regix.match(msg.content)
-            self.time_remove_role[datetime.datetime.strptime(match.group('datetime'), '%Y-%m-%d %H:%M:%S.%f')] = dict(
-                user_id = int(match.group('user_id')),
-                role_id = int(match.group('role_id')),
-                message = msg
+            self.time_remove_role[datetime.strptime(match.group('datetime'), '%Y-%m-%d %H:%M:%S.%f')] = dict(
+                user_id=int(match.group('user_id')),
+                role_id=int(match.group('role_id')),
+                message=msg
             )
 
         # メッセージレポート機能関連
@@ -156,30 +156,44 @@ class ChozatuBot(Bot):
         self.siritori_ch = self.get_channel(self.config['siritori_ch'])
         self.siritori_list = []
         async for msg in self.siritori_ch.history(limit=None):
-            if msg.author.bot or msg.content.startswith(self.command_prefix) or msg.content.startswith('!') or msg.content in self.siritori_list:
+            if msg.author.bot:
                 continue
+            if msg.content.startswith(self.command_prefix):
+                continue
+            if msg.content.startswith('!'):
+                continue
+            if msg.content in self.siritori_list:
+                continue
+
             self.siritori_list.insert(0, msg.content)
         self.siritori = True
 
-
         # import data from mongodb
-        self.send_kaso_count = await self.collection.find_one({"_id": self.mongo_id})
+        self.send_kaso_count = await self.collection.find_one(
+            {
+                "_id": self.mongo_id
+            }
+        )
 
         self.time_action_loop.stop()
         self.time_action_loop.start()
 
-
-        from aiohttp import ClientSession
         self.session = ClientSession()
-        self.session_bot = ClientSession(headers={'Authorization': "Bot "+self.http.token})
-
+        self.session_bot = ClientSession(
+            headers={
+                'Authorization': "Bot "+self.http.token
+            }
+        )
 
         print(f'ready: {self.user} (ID: {self.user.id})')
         self.ready = True
 
     async def close(self):
         await self.ready_ch.send('<a:server_rotation:774429204673724416>停止')
-        await self.collection.replace_one({"_id": self.mongo_id}, self.send_kaso_count)
+        await self.collection.replace_one(
+            {"_id": self.mongo_id},
+            self.send_kaso_count
+        )
 
         for extension in tuple(self.extensions):
             try:
@@ -212,11 +226,10 @@ class ChozatuBot(Bot):
         return self.conv.do(text)
 
     def load_extensions(self):
-        from pathlib import Path
         ext_files = tuple(Path('cogs/.').glob('*.py'))
         count = 0
         for ext in ext_files:
-            f = str(ext).replace(os.sep, '.')[:-3]
+            f = str(ext).replace(ossep, '.')[:-3]
             try:
                 self.load_extension(f)
                 print(f'{f} was loaded!')
@@ -225,7 +238,10 @@ class ChozatuBot(Bot):
             count += 1
 
         print('#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#')
-        print(f'\n    ALL COG WAS LOADED\n    COG COUNT : {count}\n    {datetime.utcnow().strftime("%H : %M : %S")}\n')
+        print(
+            f'\n\tALL COG WAS LOADED\n\tCOG COUNT : {count}\n',
+            f'\t{datetime.utcnow().strftime("%H : %M : %S")}\n'
+        )
         print('#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#')
 
     @loop(seconds=60.0)
@@ -235,8 +251,12 @@ class ChozatuBot(Bot):
         for _datatime in self.time_remove_role.keys():
             if now > _datatime:
                 try:
-                    member = await self.time_remove_role_guild.fetch_member(self.time_remove_role[_datatime]['user_id'])
-                    role = self.time_remove_role_guild.get_role(self.time_remove_role[_datatime]['role_id'])
+                    member = await self.time_remove_role_guild.fetch_member(
+                        self.time_remove_role[_datatime]['user_id']
+                    )
+                    role = self.time_remove_role_guild.get_role(
+                        self.time_remove_role[_datatime]['role_id']
+                    )
                     await member.remove_roles(role)
                     await bot.time_remove_role[_datatime]['message'].delete()
                     delete_keys.append(_datatime)
@@ -259,4 +279,7 @@ class ChozatuBot(Bot):
         embed.add_field(name='サブコマンド名', value=used_subcommand)
         embed.add_field(name='使用されたチャンネル', value=used_channel)
         embed.add_field(name='使用者', value=used_author)
-        await self.history_channel.send(embed=embed, allowed_mentions=discord.AllowedMentions.none())
+        await self.history_channel.send(
+            embed=embed,
+            allowed_mentions=discord.AllowedMentions.none()
+        )
