@@ -18,16 +18,6 @@ class Eval(commands.Cog):
         self._last_result = None
         self.sessions = set()
 
-    async def run_process(self, command):
-        try:
-            process = await asyncio.create_subprocess_shell(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-            result = await process.communicate()
-        except NotImplementedError:
-            process = subprocess.Popen(command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-            result = await self.bot.loop.run_in_executor(None, process.communicate)
-
-        return [output.decode() for output in result]
-
     def cleanup_code(self, content):
         """Automatically removes code blocks from the code."""
         # remove ```py\n```
@@ -44,7 +34,14 @@ class Eval(commands.Cog):
         if e.text is None:
             return f'```py\n{e.__class__.__name__}: {e}\n```'
         return f'```py\n{e.text}{"^":>{e.offset}}\n{e.__class__.__name__}: {e}```'
-    
+
+    def to_eval_body(self, body):
+        codes = body.split(';')
+        striped_code = [code.strip() for code in codes]
+        striped_code[-1] = 'print(' + striped_code[-1] + ')'
+        return '\n'.join(striped_code)
+
+
     @commands.command(name='eval', hidden=True)
     @commands.is_owner()
     async def _eval(self, ctx, *, body):
@@ -63,8 +60,8 @@ class Eval(commands.Cog):
         
         stdout = io.StringIO()
         
-        body = f'print({body})'
-        # func()関数を定義
+        body = self.to_eval_body(body)
+
         to_compile = f'async def func():\n{textwrap.indent(body, "  ")}'
 
         try:
