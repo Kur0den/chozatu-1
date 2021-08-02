@@ -19,7 +19,7 @@ class Money(commands.Cog):
     @commands.is_owner()
     async def money(self, ctx):
         if ctx.invoked_subcommand is None:
-            await ctx.send(embed=discord.Embed(title='サブコマンド一覧', description='```get - 情報取得\nput - 値置き換え\npatch - 価増減```', delete_after=10.0))
+            await ctx.send(embed=discord.Embed(title='サブコマンド一覧', description='```get - 情報取得\nput - 値置き換え\npatch - 価増減```'), delete_after=10.0)
             return
 
 

@@ -283,3 +283,12 @@ class ChozatuBot(Bot):
             embed=embed,
             allowed_mentions=discord.AllowedMentions.none()
         )
+
+    async def request(self, method, endpoint, *, v=None, j={}, s=self.session):
+        if v is not None:
+            url = 'https://discord.com/api/v{}/{}'.format(url, v, endpoint)
+        else:
+            url = 'https://discord.com/api/{}'.format(url, endpoint)
+
+        async with s.request(method, url=url, json=j) as r:
+            return r
