@@ -284,7 +284,9 @@ class ChozatuBot(Bot):
             allowed_mentions=discord.AllowedMentions.none()
         )
 
-    async def request(self, method, endpoint, *, v=None, j={}, s=self.session):
+    async def request(self, method, endpoint, *, v=None, j={}, s=None):
+        if s is None:
+            s = self.session
         if v is not None:
             url = 'https://discord.com/api/v{}/{}'.format(url, v, endpoint)
         else:
